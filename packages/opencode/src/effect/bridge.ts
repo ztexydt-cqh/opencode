@@ -2,6 +2,7 @@ import { Effect, Fiber } from "effect"
 import { WorkspaceContext } from "@/control-plane/workspace-context"
 import { Instance, type InstanceContext } from "@/project/instance"
 import { LocalContext } from "@/util/local-context"
+import type { WorkspaceID } from "@/control-plane/schema"
 import { InstanceRef, WorkspaceRef } from "./instance-ref"
 import { attachWith } from "./run-service"
 
@@ -11,7 +12,7 @@ export namespace EffectBridge {
     readonly fork: <A, E, R>(effect: Effect.Effect<A, E, R>) => Fiber.Fiber<A, E>
   }
 
-  function restore<R>(instance: InstanceContext | undefined, workspace: string | undefined, fn: () => R): R {
+  function restore<R>(instance: InstanceContext | undefined, workspace: WorkspaceID | undefined, fn: () => R): R {
     if (instance && workspace !== undefined) {
       return WorkspaceContext.restore(workspace, () => Instance.restore(instance, fn))
     }
